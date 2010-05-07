@@ -638,7 +638,7 @@ class UsrDict(DictBase):
 class SkkServ(DictBase):
     HOST='localhost'
     PORT=1178
-    BUFSIZ = 4096
+    BUFSIZ = 16 * 1024
 
     def __init__(self, host=HOST, port=PORT, encoding=DictBase.ENCODING):
         self.__host = host
@@ -675,7 +675,8 @@ class SkkServ(DictBase):
         try:
             self.__socket.send('1' + midasi.encode(self.__encoding) + ' ')
             candidates = self.__socket.recv(self.BUFSIZ)
-            if len(candidates) == 0 or candidates[0] != '1':
+            if len(candidates) == 0 or candidates[0] != '1' or \
+                candidates[-1] != '\n':
                 return list()
             return self.split_candidates(candidates.decode(self.__encoding)[1:])
         except socket.error:

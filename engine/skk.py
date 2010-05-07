@@ -662,6 +662,7 @@ class SkkServ(DictBase):
         self.__close()
         try:
             self.__socket = socket.socket()
+            self.__socket.settimeout(3)
             self.__socket.connect((self.__host, self.__port))
             # Request server version.
             self.__socket.send('2')

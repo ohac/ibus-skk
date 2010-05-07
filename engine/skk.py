@@ -982,10 +982,11 @@ class Context(object):
         if key == 'ctrl+h':
             return self.delete_char()
 
+        idle = len(self.__rom_kana_state[1]) == 0
         if self.__conv_state == CONV_STATE_NONE:
             input_mode = INPUT_MODE_TRANSITION_RULE.get(key, dict()).\
                 get(self.__input_mode)
-            if input_mode is not None:
+            if idle and input_mode is not None:
                 self.reset()
                 self.activate_input_mode(input_mode)
                 return (True, u'')
@@ -1025,6 +1026,8 @@ class Context(object):
         elif self.__conv_state == CONV_STATE_START:
             input_mode = INPUT_MODE_TRANSITION_RULE.get(key, dict()).\
                 get(self.__input_mode)
+            if not idle:
+                input_mode = None
             if self.__input_mode == INPUT_MODE_HIRAGANA and \
                     input_mode == INPUT_MODE_KATAKANA:
                 kana = self.__hiragana_to_katakana(self.__rom_kana_state[0])

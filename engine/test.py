@@ -528,6 +528,11 @@ class TestSKK(unittest.TestCase):
         self.assert_(handled)
         self.assertEqual(output, '\x1b')
         self.assertEqual(self.__skk.conv_state, skk.CONV_STATE_NONE)
+        self.__skk.activate_input_mode(skk.INPUT_MODE_HIRAGANA)
+        handled, output = self.__skk.press_key(u'ctrl+[')
+        self.assert_(handled)
+        self.assertEqual(output, '\x1b')
+        self.assertEqual(self.__skk.conv_state, skk.CONV_STATE_NONE)
 
 if __name__ == '__main__':
     unittest.main()

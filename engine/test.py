@@ -521,5 +521,24 @@ class TestSKK(unittest.TestCase):
         self.__skk.press_key(u' ')
         self.assertEqual(self.__skk.preedit, u'▼リクエスト')
 
+    def testkuten(self):
+        self.__skk.reset()
+        self.__skk.activate_input_mode(skk.INPUT_MODE_HIRAGANA)
+        self.__skk.press_key(u'\\')
+        self.assertEqual(self.__skk.preedit, u'Kuten([MM]KKTT) ')
+        self.__skk.press_key(u'a')
+        self.__skk.press_key(u'backspace')
+        self.assertEqual(self.__skk.preedit, u'Kuten([MM]KKTT) ')
+        self.__skk.press_key(u'backspace')
+        self.assertEqual(self.__skk.preedit, u'')
+        self.__skk.press_key(u'\\')
+        self.__skk.press_key(u'a')
+        self.__skk.press_key(u'1')
+        self.__skk.press_key(u'a')
+        self.__skk.press_key(u'2')
+        handled, output = self.__skk.press_key(u'return')
+        self.assertTrue(handled)
+        self.assertEqual(output, u'、')
+
 if __name__ == '__main__':
     unittest.main()

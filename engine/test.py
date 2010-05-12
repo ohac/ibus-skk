@@ -31,9 +31,17 @@ class TestSKK(unittest.TestCase):
                             tp.write(u'#ひき /#1匹/#3匹/#0匹/#2匹/\n'.encode('EUC-JP'))
                         if line.startswith('greek '):
                             tp.write(u'request /リクエスト/\n'.encode('EUC-JP'))
+        words_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  "words")
+        if not os.path.exists(words_path):
+            with open(words_path, 'a') as tp:
+                tp.write(u'\n')
+                tp.write(u'abcd\n')
+                tp.write(u'efgh\n')
+                tp.write(u'ijkl\n')
 
         self.__skk = skk.Context(usrdict=skk.UsrDict(usrdict_path),
-                                 sysdict=skk.SysDict(sysdict_path),
+                                 sysdict=skk.SysDict(sysdict_path, words_path),
                                  candidate_selector=skk.CandidateSelector())
 
     def testusrdict(self):
@@ -539,6 +547,17 @@ class TestSKK(unittest.TestCase):
         handled, output = self.__skk.press_key(u'return')
         self.assertTrue(handled)
         self.assertEqual(output, u'、')
+
+    def testlook(self):
+        self.__skk.reset()
+        self.__skk.activate_input_mode(skk.INPUT_MODE_HIRAGANA)
+        self.__skk.press_key(u'/')
+        self.__skk.press_key(u'e')
+        self.__skk.press_key(u'f')
+        self.__skk.press_key(u'g')
+        self.assertEqual(self.__skk.preedit, u'▽efg')
+        self.__skk.press_key(u'\t')
+        self.assertEqual(self.__skk.preedit, u'▽efgh')
 
 if __name__ == '__main__':
     unittest.main()

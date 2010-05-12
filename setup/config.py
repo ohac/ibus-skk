@@ -7,6 +7,8 @@ class Config:
                        '/usr/local/share/skk/SKK-JISYO',
                        '/usr/local/share/skk/SKK-JISYO.L')
     __usrdict_path_unexpanded = '~/.skk-ibus-jisyo'
+    __words_paths = ('/usr/share/dict/words',
+                     '/usr/local/share/dict/words')
 
     def __init__(self, bus=ibus.Bus()):
         self.__bus = bus
@@ -25,6 +27,13 @@ class Config:
         return usrdict_path
     usrdict_path = property(lambda self: self.get_value(\
             'usrdict', self.__usrdict_path()))
+
+    def __words_path(self):
+        for path in self.__words_paths:
+            if os.path.exists(path):
+                return path
+    words_path = property(lambda self: self.get_value(\
+            'words', self.__words_path()))
 
     def get_value(self, name, defval=None):
         value = self.__config.get_value('engine/SKK', name, None)

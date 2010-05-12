@@ -61,7 +61,7 @@ class EngineFactory(ibus.EngineFactoryBase):
         sysdict_type = _config.get_value('sysdict_type', 'file')
         try:
             if sysdict_type == 'file':
-                return skk.SysDict(_config.sysdict_path)
+                return skk.SysDict(_config.sysdict_path, _config.words_path)
             else:
                 host = _config.get_value('skkserv_host', 'localhost')
                 port = int(_config.get_value('skkserv_port', '1178'))

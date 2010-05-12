@@ -455,10 +455,11 @@ class EmptyDict(DictBase):
         return iter(list())
 
 class SysDict(DictBase):
-    def __init__(self, path, encoding=DictBase.ENCODING):
+    def __init__(self, path, words, encoding=DictBase.ENCODING):
         self.__path = path
         self.__mtime = 0
         self.__encoding = encoding
+        self.__words_path = words
         self.reload()
 
     path = property(lambda self: self.__path)
@@ -472,6 +473,7 @@ class SysDict(DictBase):
             return
         try:
             self.__load()
+            self.__load_words()
         except IOError:
             pass
         self.__mtime = mtime
@@ -500,6 +502,21 @@ class SysDict(DictBase):
                 else:
                     offsets.append(pos)
             self.__okuri_ari.reverse()
+
+    def __load_words(self):
+        self.__words_dict = list()
+        with open(self.__words_path, 'r') as fp:
+            # Skip empty line
+            line = fp.readline()
+            pos = fp.tell()
+            offsets = self.__words_dict
+            offsets.append(pos)
+            while True:
+                pos = fp.tell()
+                line = fp.readline()
+                if not line:
+                    break
+                offsets.append(pos)
 
     def __search_pos(self, fp, offsets, _cmp):
         fp.seek(0)
@@ -567,7 +584,28 @@ class SysDict(DictBase):
                     _midasi, candidates = line.split(' ', 1)
                     yield _midasi.decode(self.__encoding)
                     pos += 1
-                
+        with open(self.__words_path, 'r') as fp:
+            midasi = midasi.encode(self.__encoding)
+            def _completer_cmp(line):
+                if line.startswith(midasi):
+                    return 0
+                return cmp(midasi, line)
+            r = self.__search_pos(fp, self.__words_dict, _completer_cmp)
+            if r:
+                pos, line = r
+                while pos >= 0:
+                    fp.seek(self.__words_dict[pos])
+                    line = fp.next()
+                    if not line.startswith(midasi):
+                        pos += 1
+                        break
+                    pos -= 1
+                while pos < len(self.__words_dict):
+                    fp.seek(self.__words_dict[pos])
+                    line = fp.next()[0:-1]
+                    yield line.decode(self.__encoding)
+                    pos += 1
+
     def completer(self, midasi):
         try:
             return self.__completer(midasi)

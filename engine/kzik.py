@@ -182,7 +182,8 @@ KZIK_RULE = {
     u'ff': (u'f', (u'ッ', u'っ')),
     u'tt': (u't', (u'ッ', u'っ')),
     u'-': (None, u'ー'),
-    u':': (u'b', (u'ッ', u'っ')),
+    u'+': (u't', (u'', u'')), # JP Keyboard
+    u':': (u't', (u'', u'')), # US Keyboard
     u';': (None, (u'ッ', u'っ')),
     u'?': (None, u'？'),
     u'[': (None, u'「'),

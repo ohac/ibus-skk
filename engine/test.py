@@ -397,6 +397,23 @@ class TestSKK(unittest.TestCase):
         self.__skk.rom_kana_rule = skk.ROM_KANA_NORMAL
         self.__skk.reset()
 
+    def testazikdict(self):
+        self.__skk.reset()
+        self.__skk.rom_kana_rule = skk.ROM_KANA_KZIK
+        self.__skk.activate_input_mode(skk.INPUT_MODE_HIRAGANA)
+        self.__skk.press_key(u'shift+t')
+        self.__skk.press_key(u'a')
+        self.__skk.press_key(u'shift+:')
+        self.__skk.press_key(u't')
+        self.__skk.press_key(u'a')
+        self.assertEqual(self.__skk.preedit, u'▼立った')
+        self.__skk.press_key(u'shift+t')
+        self.__skk.press_key(u'a')
+        self.__skk.press_key(u'shift++')
+        self.__skk.press_key(u't')
+        self.__skk.press_key(u'a')
+        self.assertEqual(self.__skk.preedit, u'▼立った')
+
     def testdictedit(self):
         self.__skk.reset()
         self.__skk.activate_input_mode(skk.INPUT_MODE_HIRAGANA)

@@ -590,5 +590,13 @@ class TestSKK(unittest.TestCase):
         self.assertTrue(handled)
         self.assertEqual(output, u'＼')
 
+    def testtypingerror(self):
+        self.__skk.reset()
+        self.__skk.activate_input_mode(skk.INPUT_MODE_HIRAGANA)
+        self.__skk.press_key(u'shift+k')
+        handled, output = self.__skk.press_key(u' ')
+        self.assertTrue(handled)
+        self.assertEqual(output, u' ')
+
 if __name__ == '__main__':
     unittest.main()

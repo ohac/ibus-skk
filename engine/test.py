@@ -492,6 +492,9 @@ class TestSKK(unittest.TestCase):
         self.__skk.press_key(u'a')
         self.__skk.press_key(u' ')
         self.__skk.press_key(u' ')
+        handled, output = self.__skk.press_key(u'ctrl+h')
+        self.assertTrue(handled)
+        self.assertEqual(output, u'')
         self.__skk.press_key(u'shift+k')
         self.__skk.press_key(u'a')
         self.__skk.press_key(u't')
@@ -507,6 +510,9 @@ class TestSKK(unittest.TestCase):
         self.__skk.press_key(u'n')
         self.__skk.press_key(u'a')
         self.assertEqual(self.__skk.preedit, u'[DictEdit] かたかな カタカna')
+        handled, output = self.__skk.press_key(u'ctrl+m')
+        self.assertTrue(handled)
+        self.assertEqual(output, u'カタカna')
 
     def testhankaku(self):
         self.__skk.reset()

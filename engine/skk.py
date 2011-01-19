@@ -455,6 +455,16 @@ INPUT_MODE_TRANSITION_RULE = {
     u'ctrl+q': {
         INPUT_MODE_KATAKANA: INPUT_MODE_HANKAKU_KATAKANA,
         INPUT_MODE_HANKAKU_KATAKANA: INPUT_MODE_KATAKANA
+        },
+    u'escape': {
+        INPUT_MODE_HIRAGANA: INPUT_MODE_LATIN,
+        INPUT_MODE_KATAKANA: INPUT_MODE_LATIN,
+        INPUT_MODE_WIDE_LATIN: INPUT_MODE_LATIN
+        },
+    u'ctrl+[': {
+        INPUT_MODE_HIRAGANA: INPUT_MODE_LATIN,
+        INPUT_MODE_KATAKANA: INPUT_MODE_LATIN,
+        INPUT_MODE_WIDE_LATIN: INPUT_MODE_LATIN
         }
     }
 
@@ -1351,6 +1361,8 @@ class Context(object):
                         output = u''
                     self.reset()
                     self.activate_input_mode(input_mode)
+                    if str(key) in ('escape', 'ctrl+['):
+                        return (True, u'\x1b')
                     return (True, output)
 
             if self.dict_edit_level() > 0 and str(key) in ('ctrl+j', 'ctrl+m', 'return'):

@@ -1151,6 +1151,7 @@ class Context(object):
         self.egg_like_newline = True
         self.direct_input_on_latin = False
         self.translated_strings = dict(TRANSLATED_STRINGS)
+        self.use_with_vi = False
         self.debug = False
         self.reset()
 
@@ -1188,7 +1189,10 @@ class Context(object):
         if self.__custom_rom_kana_rule != custom_rom_kana_rule:
             self.__custom_rom_kana_rule = custom_rom_kana_rule
             self.__update_rom_kana_rule_tree()
-            
+
+    def set_use_with_vi(self):
+        self.use_with_vi = True
+
     custom_rom_kana_rule = property(lambda self: self.__custom_rom_kana_rule,
                                     set_custom_rom_kana_rule)
 
@@ -1361,7 +1365,7 @@ class Context(object):
                         output = u''
                     self.reset()
                     self.activate_input_mode(input_mode)
-                    if str(key) in ('escape', 'ctrl+['):
+                    if self.use_with_vi and str(key) in ('escape', 'ctrl+['):
                         return (True, u'\x1b')
                     return (True, output)
 

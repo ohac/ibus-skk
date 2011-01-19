@@ -199,7 +199,8 @@ class Engine(ibus.EngineBase):
             self.__nicola_handler = None
         else:
             self.__nicola = None
-
+        if self.config.get_value('use_with_vi'):
+            self.__skk.set_use_with_vi()
 
     def __init_props(self):
         skk_props = ibus.PropList()
